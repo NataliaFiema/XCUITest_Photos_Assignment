@@ -37,4 +37,16 @@ class BasePage {
         }
         return labels
     }
+    
+    func getNumberOfDuplicatedTitlesThatMatchSelectedTitle(titles: [String], matchingTitle: String) -> Int {
+        var numberOfDuplicatedTitles = 0;
+        
+        for title in titles {
+            if title == matchingTitle {
+                numberOfDuplicatedTitles = numberOfDuplicatedTitles+1
+            }
+        }
+        
+        return numberOfDuplicatedTitles
+    }
 }

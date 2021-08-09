@@ -22,6 +22,7 @@ class AllPhotosPage_Tests: BaseTest {
         let selectedPhoto = allPhotosPage.navigateToSelectPhotosView().selectRandomPhoto()
         let selectedPhotoTitle = allPhotosPage.getLabelOfElement(element: selectedPhoto)
         let photosBeforeDelete = allPhotosPage.getListOfPhotos()
+        let photosBeforeDeleteTitles = basePage.getListOfLabels(arrayOfElements: photosBeforeDelete)
         allPhotosPage.confirmPhotoSelection(element: selectedPhoto)
         
         //delete photo chosen in previous section
@@ -30,8 +31,15 @@ class AllPhotosPage_Tests: BaseTest {
         //verify if photo was deleted
         let photosAfterDelete = basePage.getListOfLabels(arrayOfElements: allPhotosPage.getListOfPhotos())
         XCTAssertTrue(photosAfterDelete.count == photosBeforeDelete.count-1, "Number of found photos: \(photosAfterDelete.count) but should be: \(photosBeforeDelete.count-1)")
-        //Please note, test can fail in here when we have more than 1 picture added at exactly the same time
-        XCTAssertFalse(photosAfterDelete.contains(selectedPhotoTitle), "Picture: \(selectedPhotoTitle) is still displayed")
+        
+        let duplicates = basePage.getNumberOfDuplicatedTitlesThatMatchSelectedTitle(titles: photosBeforeDeleteTitles, matchingTitle: selectedPhotoTitle)
+        if duplicates == 0 {
+            XCTAssertFalse(photosAfterDelete.contains(selectedPhotoTitle), "Picture: \(selectedPhotoTitle) is still displayed.")
+        }
+        else {
+            let duplicatedAfterDelete = basePage.getNumberOfDuplicatedTitlesThatMatchSelectedTitle(titles: photosAfterDelete, matchingTitle: selectedPhotoTitle)
+            XCTAssertTrue(duplicatedAfterDelete == duplicates-1, "Picture is not deleted. Number of photos before: \(duplicates), number of photos after: \(duplicatedAfterDelete)")
+        }
     }
     
     func testDeletePhotoWithoutSelect() throws {
@@ -42,6 +50,7 @@ class AllPhotosPage_Tests: BaseTest {
         let selectedPhoto = allPhotosPage.selectRandomPhoto()
         let selectedPhotoTitle = allPhotosPage.getLabelOfElement(element: selectedPhoto)
         let photosBeforeDelete = allPhotosPage.getListOfPhotos()
+        let photosBeforeDeleteTitles = basePage.getListOfLabels(arrayOfElements: photosBeforeDelete)
         allPhotosPage.confirmPhotoSelection(element: selectedPhoto)
         
         let photosAfterDelete = detailsPhotoPage
@@ -53,7 +62,15 @@ class AllPhotosPage_Tests: BaseTest {
         XCTAssertTrue(photosBeforeDelete.count - 1 == photosAfterDelete.count, "Number of photos after deleting one is not correct. Expected number: \(photosBeforeDelete.count - 1) but found: \(photosAfterDelete.count)")
         
         let photosAfterDeleteTitles = basePage.getListOfLabels(arrayOfElements: photosAfterDelete)
-        XCTAssertFalse(photosAfterDeleteTitles.contains(selectedPhotoTitle), "Photo: \(selectedPhotoTitle) is still displayed.")
+       
+        let duplicates = basePage.getNumberOfDuplicatedTitlesThatMatchSelectedTitle(titles: photosBeforeDeleteTitles, matchingTitle: selectedPhotoTitle)
+        if duplicates == 0 {
+            XCTAssertFalse(photosAfterDeleteTitles.contains(selectedPhotoTitle), "Picture: \(selectedPhotoTitle) is still displayed.")
+        }
+        else {
+            let duplicatedAfterDelete = basePage.getNumberOfDuplicatedTitlesThatMatchSelectedTitle(titles: photosAfterDeleteTitles, matchingTitle: selectedPhotoTitle)
+            XCTAssertTrue(duplicatedAfterDelete == duplicates-1, "Picture is not deleted. Number of photos before: \(duplicates), number of photos after: \(duplicatedAfterDelete)")
+        }
     }
 
 }
