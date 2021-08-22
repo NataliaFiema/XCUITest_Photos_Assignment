@@ -43,7 +43,7 @@ class BasePage {
         
         for title in titles {
             if title == matchingTitle {
-                numberOfDuplicatedTitles = numberOfDuplicatedTitles+1
+                numberOfDuplicatedTitles += 1
             }
         }
         
