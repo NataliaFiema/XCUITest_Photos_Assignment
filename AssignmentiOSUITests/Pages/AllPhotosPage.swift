@@ -40,8 +40,9 @@ class AllPhotosPage_Functions: AllPhotosPage_Elements {
         return selectedPhoto
     }
     
-    func confirmPhotoSelection(element: XCUIElement) {
+    @discardableResult func confirmPhotoSelection(element: XCUIElement) -> Self {
         element.tap()
+        return self
     }
     
     func getListOfPhotos() -> [XCUIElement] {

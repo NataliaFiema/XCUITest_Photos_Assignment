@@ -23,10 +23,9 @@ class AllPhotosPage_Tests: BaseTest {
         let selectedPhotoTitle = allPhotosPage.getLabelOfElement(element: selectedPhoto)
         let photosBeforeDelete = allPhotosPage.getListOfPhotos()
         let photosBeforeDeleteTitles = basePage.getListOfLabels(arrayOfElements: photosBeforeDelete)
-        allPhotosPage.confirmPhotoSelection(element: selectedPhoto)
         
-        //delete photo chosen in previous section
-        allPhotosPage.deletePhoto()
+        //delete photo
+        allPhotosPage.confirmPhotoSelection(element: selectedPhoto).deletePhoto()
         
         //verify if photo was deleted
         let photosAfterDelete = basePage.getListOfLabels(arrayOfElements: allPhotosPage.getListOfPhotos())
